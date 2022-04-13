@@ -1,20 +1,27 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"net/http"
-	"wxcloudrun-golang/db"
-	"wxcloudrun-golang/service"
+
+	"github.com/rixingyike/wechat" // 微信SDK包
 )
 
 func main() {
-	if err := db.Init(); err != nil {
-		panic(fmt.Sprintf("mysql init failed with %+v", err))
+	wechat.Debug = true
+
+	cfg := &wechat.WxConfig{
+		Token:          "master",
+		AppId:          "wx843991a75ff6c743_123",
+		Secret:         "2fd0d0a8ae95227f9bf584214622b134",
+		EncodingAESKey: "",
 	}
 
-	http.HandleFunc("/", service.IndexHandler)
-	http.HandleFunc("/api/count", service.CounterHandler)
+	app := wechat.New(cfg)
+	app.SendText("@all", "Hello,World!")
 
-	log.Fatal(http.ListenAndServe(":80", nil))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		app.VerifyURL(w, r).NewText("客服消息1").Send().NewText("客服消息2").Send().NewText("查询OK").Reply()
+	})
+
+	http.ListenAndServe(":9090", nil)
 }

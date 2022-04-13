@@ -1,8 +1,7 @@
-module wxcloudrun-golang
+module weixin
 
-go 1.16
+go 1.18
 
-require (
-	gorm.io/driver/mysql v1.1.2
-	gorm.io/gorm v1.21.16
-)
+require github.com/esap/wechat v1.1.0
+
+require github.com/rixingyike/wechat v1.2.2 // indirect
